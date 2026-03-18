@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.zt64.subsonic.api.model.Album
 import dev.zt64.subsonic.api.model.SongCollection
 import paige.navic.LocalMediaPlayer
 import paige.navic.ui.components.common.ErrorBox
@@ -80,7 +81,7 @@ fun TracksScreen(
 					.padding(top = contentPadding.calculateTopPadding())
 					.background(MaterialTheme.colorScheme.surface),
 				isRefreshing = tracks is UiState.Loading
-					|| artistState is UiState.Loading,
+					|| (artistState is UiState.Loading && partialTracks is Album),
 				onRefresh = {
 					viewModel.refreshTracks()
 					viewModel.refreshArtist()
