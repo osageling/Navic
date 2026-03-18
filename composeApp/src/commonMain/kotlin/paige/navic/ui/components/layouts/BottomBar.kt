@@ -101,7 +101,12 @@ fun BottomBar(
 	modifier: Modifier = Modifier,
 	containerColor: Color = NavigationBarDefaults.containerColor,
 	windowInsets: WindowInsets = NavigationBarDefaults.windowInsets,
-	viewModel: NavtabsViewModel = viewModel { NavtabsViewModel(com.russhwolf.settings.Settings(), Json) }
+	viewModel: NavtabsViewModel = viewModel {
+		NavtabsViewModel(
+			com.russhwolf.settings.Settings(),
+			Json
+		)
+	}
 ) {
 	val backStack = LocalNavStack.current
 	val ctx = LocalCtx.current
@@ -135,22 +140,22 @@ fun BottomBar(
 						selected = selected,
 						onClick = {
 							ctx.clickSound()
-							if (item != NavItem.LIBRARY) {
-								backStack.add(NavItem.LIBRARY.destination)
+							backStack.apply {
+								clear()
+								add(item.destination)
 							}
-							backStack.add(item.destination)
 						},
 						icon = {
-								if (selected) {
-									val painter = animatedTabIconPainter(item.destination)
-									if (painter != null) {
-										Icon(painter = painter, null)
-									} else {
-										Icon(item.icon, null)
-									}
+							if (selected) {
+								val painter = animatedTabIconPainter(item.destination)
+								if (painter != null) {
+									Icon(painter = painter, null)
 								} else {
-									Icon(item.iconUnselected, null)
+									Icon(item.icon, null)
 								}
+							} else {
+								Icon(item.iconUnselected, null)
+							}
 						},
 						label = {
 							Text(
@@ -188,20 +193,22 @@ fun BottomBar(
 						selected = backStack.last() == item.destination,
 						onClick = {
 							ctx.clickSound()
-							backStack.clear()
-							backStack.add(item.destination)
+							backStack.apply {
+								clear()
+								add(item.destination)
+							}
 						},
 						icon = {
-								if (selected) {
-									val painter = animatedTabIconPainter(item.destination)
-									if (painter != null) {
-										Icon(painter = painter, null)
-									} else {
-										Icon(item.icon, null)
-									}
+							if (selected) {
+								val painter = animatedTabIconPainter(item.destination)
+								if (painter != null) {
+									Icon(painter = painter, null)
 								} else {
-									Icon(item.iconUnselected, null)
+									Icon(item.icon, null)
 								}
+							} else {
+								Icon(item.iconUnselected, null)
+							}
 						},
 						label = {
 							Text(stringResource(item.label))
