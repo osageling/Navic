@@ -27,6 +27,7 @@ import dev.zt64.subsonic.api.model.Album
 import dev.zt64.subsonic.api.model.SongCollection
 import paige.navic.LocalMediaPlayer
 import paige.navic.data.models.settings.Settings
+import paige.navic.data.models.settings.enums.BottomBarVisibilityMode
 import paige.navic.ui.components.common.ErrorBox
 import paige.navic.ui.components.dialogs.ShareDialog
 import paige.navic.ui.components.layouts.RootBottomBar
@@ -78,7 +79,7 @@ fun TracksScreen(
 				)
 			},
 			bottomBar = {
-				if (Settings.shared.showBarsOnAllScreens) {
+				if (Settings.shared.bottomBarVisibilityMode == BottomBarVisibilityMode.AllScreens) {
 					RootBottomBar(scrolled = viewModel.listState.lastScrolledForward)
 				}
 			}

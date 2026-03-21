@@ -55,6 +55,7 @@ import paige.navic.data.models.settings.enums.PlaylistSortMode
 import paige.navic.data.models.Screen
 import paige.navic.data.models.settings.Settings
 import paige.navic.data.models.settings.enums.BottomBarCollapseMode
+import paige.navic.data.models.settings.enums.BottomBarVisibilityMode
 import paige.navic.data.session.SessionManager
 import paige.navic.icons.Icons
 import paige.navic.icons.outlined.Add
@@ -154,7 +155,7 @@ fun PlaylistsScreen(
 			}
 		},
 		bottomBar = {
-			if (!nested || Settings.shared.showBarsOnAllScreens) {
+			if (!nested || Settings.shared.bottomBarVisibilityMode == BottomBarVisibilityMode.AllScreens) {
 				RootBottomBar(scrolled = viewModel.gridState.lastScrolledForward)
 			}
 		}

@@ -84,6 +84,7 @@ import paige.navic.LocalMediaPlayer
 import paige.navic.LocalNavStack
 import paige.navic.data.models.Screen
 import paige.navic.data.models.settings.Settings
+import paige.navic.data.models.settings.enums.BottomBarVisibilityMode
 import paige.navic.icons.Icons
 import paige.navic.icons.brand.Lastfm
 import paige.navic.icons.brand.Musicbrainz
@@ -131,7 +132,7 @@ fun ArtistScreen(
 				)
 			},
 			bottomBar = {
-				if (Settings.shared.showBarsOnAllScreens) {
+				if (Settings.shared.bottomBarVisibilityMode == BottomBarVisibilityMode.AllScreens) {
 					RootBottomBar(scrolled = viewModel.scrollState.lastScrolledForward)
 				}
 			}
