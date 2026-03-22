@@ -69,7 +69,7 @@ import paige.navic.shared.rememberShareManager
 import paige.navic.ui.components.dialogs.SideloadingDialog
 import paige.navic.ui.navigation.Material3Transitions
 import paige.navic.ui.scenes.BottomSheetSceneStrategy
-import paige.navic.ui.screens.AlbumsScreen
+import paige.navic.ui.screens.album.AlbumListScreen
 import paige.navic.ui.screens.artist.ArtistDetailScreen
 import paige.navic.ui.screens.artist.ArtistListScreen
 import paige.navic.ui.screens.LibraryScreen
@@ -231,8 +231,8 @@ private fun entryProvider(
 		entry<Screen.Library>(metadata = navtabMetadata) {
 			LibraryScreen()
 		}
-		entry<Screen.Albums>(metadata = navtabMetadata) { key ->
-			AlbumsScreen(key.nested, key.listType)
+		entry<Screen.AlbumList>(metadata = navtabMetadata) { key ->
+			AlbumListScreen(key.nested, key.listType)
 		}
 		entry<Screen.Playlists>(metadata = navtabMetadata) { key ->
 			PlaylistsScreen(key.nested)
@@ -240,7 +240,7 @@ private fun entryProvider(
 		entry<Screen.ArtistList>(metadata = navtabMetadata) { key ->
 			ArtistListScreen(key.nested)
 		}
-		entry<Screen.Genres>(metadata = navtabMetadata) { key ->
+		entry<Screen.GenreList>(metadata = navtabMetadata) { key ->
 			GenreListScreen(key.nested)
 		}
 

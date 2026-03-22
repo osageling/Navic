@@ -23,12 +23,12 @@ sealed interface Screen : NavKey {
 		val nested: Boolean = false
 	) : Screen
 	@Serializable
-	data class Albums(
+	data class AlbumList(
 		val nested: Boolean = false,
 		val listType: AlbumListType? = null
 	) : Screen
 	@Serializable
-	data class Genres(
+	data class GenreList(
 		val nested: Boolean = false
 	) : Screen
 

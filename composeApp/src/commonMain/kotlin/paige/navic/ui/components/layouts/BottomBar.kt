@@ -67,7 +67,7 @@ private enum class NavItem(
 		label = Res.string.title_library
 	),
 	ALBUMS(
-		destination = Screen.Albums(),
+		destination = Screen.AlbumList(),
 		icon = Icons.Filled.Album,
 		iconUnselected = Icons.Outlined.Album,
 		label = Res.string.title_albums
@@ -90,7 +90,7 @@ private enum class NavItem(
 		label = Res.string.title_search
 	),
 	GENRES(
-		destination = Screen.Genres(),
+		destination = Screen.GenreList(),
 		icon = Icons.Outlined.Genre,
 		iconUnselected = Icons.Outlined.Genre,
 		label = Res.string.title_genres

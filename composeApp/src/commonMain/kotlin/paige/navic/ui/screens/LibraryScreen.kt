@@ -67,10 +67,11 @@ import paige.navic.ui.components.dialogs.ShareDialog
 import paige.navic.ui.components.layouts.RootBottomBar
 import paige.navic.ui.components.layouts.RootTopBar
 import paige.navic.ui.components.layouts.horizontalSection
+import paige.navic.ui.screens.album.components.AlbumListScreenItem
 import paige.navic.ui.screens.artist.ArtistsScreenItem
 import paige.navic.ui.screens.genres.components.GenreListScreenCard
 import paige.navic.ui.theme.defaultFont
-import paige.navic.ui.viewmodels.AlbumsViewModel
+import paige.navic.ui.screens.album.viewmodels.AlbumListViewModel
 import paige.navic.ui.screens.artist.viewmodels.ArtistListViewModel
 import paige.navic.ui.screens.genres.viewmodels.GenreListViewModel
 import paige.navic.ui.viewmodels.PlaylistsViewModel
@@ -82,19 +83,19 @@ import kotlin.time.Duration
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryScreen(
-	albumsViewModel: AlbumsViewModel = viewModel(key = "libraryAlbums") {
-		AlbumsViewModel(AlbumListType.Recent)
+	albumListViewModel: AlbumListViewModel = viewModel(key = "libraryAlbums") {
+		AlbumListViewModel(AlbumListType.Recent)
 	},
 	playlistsViewModel: PlaylistsViewModel = viewModel { PlaylistsViewModel() },
 	artistListViewModel: ArtistListViewModel = viewModel { ArtistListViewModel() },
 	genreListViewModel: GenreListViewModel = viewModel { GenreListViewModel() }
 ) {
-	val recentsState by albumsViewModel.albumsState.collectAsState()
+	val recentsState by albumListViewModel.albumsState.collectAsState()
 	val playlistsState by playlistsViewModel.playlistsState.collectAsState()
 	val artistsState by artistListViewModel.artistsState.collectAsState()
 	val genresState by genreListViewModel.genresState.collectAsState()
 
-	val gridState = albumsViewModel.gridState
+	val gridState = albumListViewModel.gridState
 
 	val flatArtistsState = remember(artistsState) {
 		when (val s = artistsState) {
@@ -127,7 +128,7 @@ fun LibraryScreen(
 				|| genresState is UiState.Loading,
 			onRefresh = {
 				if (!isLoggedIn) return@PullToRefreshBox
-				albumsViewModel.refreshAlbums()
+				albumListViewModel.refreshAlbums()
 				playlistsViewModel.refreshPlaylists()
 				artistListViewModel.refreshArtists()
 				genreListViewModel.refreshGenres()
@@ -144,25 +145,25 @@ fun LibraryScreen(
 				overviewButton(
 					icon = Icons.Outlined.LibraryAdd,
 					label = Res.string.option_sort_newest,
-					destination = Screen.Albums(true, AlbumListType.Newest),
+					destination = Screen.AlbumList(true, AlbumListType.Newest),
 					start = true
 				)
 				overviewButton(
 					icon = Icons.Outlined.Shuffle,
 					label = Res.string.option_sort_random,
-					destination = Screen.Albums(true, AlbumListType.Random),
+					destination = Screen.AlbumList(true, AlbumListType.Random),
 					start = false
 				)
 				overviewButton(
 					icon = Icons.Outlined.Star,
 					label = Res.string.option_sort_starred,
-					destination = Screen.Albums(true, AlbumListType.Starred),
+					destination = Screen.AlbumList(true, AlbumListType.Starred),
 					start = true
 				)
 				overviewButton(
 					icon = Icons.Outlined.History,
 					label = Res.string.option_sort_frequent,
-					destination = Screen.Albums(true, AlbumListType.Frequent),
+					destination = Screen.AlbumList(true, AlbumListType.Frequent),
 					start = false
 				)
 				if (!isLoggedIn) {
@@ -176,15 +177,15 @@ fun LibraryScreen(
 				} else {
 					horizontalSection(
 						title = Res.string.option_sort_recent,
-						destination = Screen.Albums(true, AlbumListType.Recent),
+						destination = Screen.AlbumList(true, AlbumListType.Recent),
 						state = recentsState,
 						key = { it.id },
 						seeAll = true
 					) { album ->
-						AlbumsScreenItem(
+						AlbumListScreenItem(
 							modifier = Modifier.animateItem(fadeInSpec = null).width(150.dp),
 							album = album,
-							viewModel = albumsViewModel,
+							viewModel = albumListViewModel,
 							onSetShareId = { shareId = it },
 							tab = "library"
 						)
@@ -223,7 +224,7 @@ fun LibraryScreen(
 
 					horizontalSection(
 						title = Res.string.title_genres,
-						destination = Screen.Genres(true),
+						destination = Screen.GenreList(true),
 						state = genresState,
 						key = { it.genre.name },
 						seeAll = true
@@ -281,7 +282,7 @@ private fun LazyGridScope.overviewButton(
 			),
 			onClick = {
 				ctx.clickSound()
-				if (backStack.lastOrNull() !is Screen.Albums) {
+				if (backStack.lastOrNull() !is Screen.AlbumList) {
 					backStack.add(destination)
 				}
 			}

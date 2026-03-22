@@ -1,4 +1,4 @@
-package paige.navic.ui.viewmodels
+package paige.navic.ui.screens.album.viewmodels
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.lifecycle.ViewModel
@@ -13,9 +13,9 @@ import paige.navic.data.repositories.AlbumsRepository
 import paige.navic.data.session.SessionManager
 import paige.navic.utils.UiState
 
-open class AlbumsViewModel(
-	initialListType: AlbumListType?,
-	private val repository: AlbumsRepository = AlbumsRepository()
+open class AlbumListViewModel(
+    initialListType: AlbumListType?,
+    private val repository: AlbumsRepository = AlbumsRepository()
 ) : ViewModel() {
 	private val _albumsState = MutableStateFlow<UiState<List<Album>>>(UiState.Loading)
 	val albumsState = _albumsState.asStateFlow()

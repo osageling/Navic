@@ -94,7 +94,7 @@ fun GenreListScreenCard(
 		shadowElevation = 2.dp,
 		onClick = {
 			ctx.clickSound()
-			backStack.add(Screen.Albums(
+			backStack.add(Screen.AlbumList(
 				nested = true,
 				listType = AlbumListType.ByGenre(genre.genre.name)
 			))
