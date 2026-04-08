@@ -30,7 +30,9 @@ import org.koin.core.parameter.parametersOf
 import paige.navic.data.models.settings.Settings
 import paige.navic.data.models.settings.enums.BottomBarVisibilityMode
 import paige.navic.data.session.SessionManager
+import paige.navic.domain.models.DomainSong
 import paige.navic.shared.MediaPlayerViewModel
+import paige.navic.ui.components.dialogs.QueueDuplicateDialog
 import paige.navic.ui.components.layouts.NestedTopBar
 import paige.navic.ui.components.layouts.RootBottomBar
 import paige.navic.ui.components.layouts.RootTopBar
@@ -63,6 +65,7 @@ fun SongListScreen(
 
 	var shareId by remember { mutableStateOf<String?>(null) }
 	var shareExpiry by remember { mutableStateOf<Duration?>(null) }
+	var songToQueue by remember { mutableStateOf<DomainSong?>(null) }
 	val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 	val isLoggedIn by SessionManager.isLoggedIn.collectAsStateWithLifecycle()
 
@@ -133,7 +136,11 @@ fun SongListScreen(
 					},
 					onSetStarred = { viewModel.starSong(it) },
 					onAddToQueue = { song ->
-						player.addToQueueSingle(song)
+						if (player.uiState.value.queue.any { it.id == song.id }) {
+							songToQueue = song
+						} else {
+							player.addToQueueSingle(song)
+						}
 					},
 					onPlaySong = { song ->
 						player.clearQueue()
@@ -152,4 +159,13 @@ fun SongListScreen(
 		expiry = shareExpiry,
 		onExpiryChange = { shareExpiry = it }
 	)
+
+	if (songToQueue != null) {
+		QueueDuplicateDialog(
+			onDismissRequest = { songToQueue = null },
+			onConfirm = {
+				songToQueue?.let { player.addToQueueSingle(it) }
+			}
+		)
+	}
 }

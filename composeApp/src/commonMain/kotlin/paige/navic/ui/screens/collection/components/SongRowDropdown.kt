@@ -25,6 +25,7 @@ import navic.composeapp.generated.resources.action_track_info
 import navic.composeapp.generated.resources.info_click_to_retry
 import navic.composeapp.generated.resources.info_download_failed
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import paige.navic.LocalNavStack
 import paige.navic.data.database.entities.DownloadStatus
 import paige.navic.data.models.Screen
@@ -44,8 +45,10 @@ import paige.navic.icons.outlined.PlaylistRemove
 import paige.navic.icons.outlined.Queue
 import paige.navic.icons.outlined.Share
 import paige.navic.icons.outlined.Star
+import paige.navic.shared.MediaPlayerViewModel
 import paige.navic.ui.components.common.Dropdown
 import paige.navic.ui.components.common.DropdownItem
+import paige.navic.ui.components.dialogs.QueueDuplicateDialog
 import paige.navic.ui.screens.playlist.dialogs.PlaylistUpdateDialog
 import paige.navic.utils.UiState
 
@@ -67,8 +70,10 @@ fun CollectionDetailScreenSongRowDropdown(
     onDeleteDownload: () -> Unit,
     onAddToQueue: () -> Unit,
 ) {
+	val player = koinViewModel<MediaPlayerViewModel>()
 	val backStack = LocalNavStack.current
 	var playlistDialogShown by rememberSaveable { mutableStateOf(false) }
+	var duplicateQueueDialogShown by rememberSaveable { mutableStateOf(false) }
 
 	Dropdown(
 		expanded = expanded,
@@ -78,8 +83,12 @@ fun CollectionDetailScreenSongRowDropdown(
 			text = { Text(stringResource(Res.string.action_add_to_queue)) },
 			leadingIcon = { Icon(Icons.Outlined.Queue, null) },
 			onClick = {
-				onAddToQueue()
-				onDismissRequest()
+				if (player.uiState.value.queue.any { it.id == song.id }) {
+					duplicateQueueDialogShown = true
+				} else {
+					onAddToQueue()
+					onDismissRequest()
+				}
 			},
 		)
 		DropdownItem(
@@ -228,6 +237,18 @@ fun CollectionDetailScreenSongRowDropdown(
 				collection.id
 			else null,
 			onDismissRequest = { playlistDialogShown = false }
+		)
+	}
+
+	if (duplicateQueueDialogShown) {
+		QueueDuplicateDialog(
+			onDismissRequest = {
+				duplicateQueueDialogShown = false
+				onDismissRequest()
+			},
+			onConfirm = {
+				onAddToQueue()
+			}
 		)
 	}
 }
